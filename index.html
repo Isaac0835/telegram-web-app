@@ -1,384 +1,135 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Futbol Live App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      --primary: #0088cc;
-      --bg: var(--tg-theme-bg-color, #0f172a);
-      --card-bg: #1e293b;
-      --text: var(--tg-theme-text-color, #f8fafc);
-      --text-muted: #94a3b8;
-      --accent: #22c55e;
-      --border: #334155;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <title>Cicles Formatius d'Informàtica</title>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding-bottom: 20px;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    /* Header */
-    header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      padding: 16px;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
 
-    header h1 {
-      font-size: 1.2rem;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+        .navbar-brand {
+            font-weight: bold;
+        }
 
-    /* Tabs Navigation */
-    .nav-tabs {
-      display: flex;
-      background: #1e293b;
-      padding: 4px;
-      margin: 12px 12px 0 12px;
-      border-radius: 12px;
-      gap: 4px;
-    }
+        .tab-content {
+            margin: 40px auto;
+            max-width: 900px;
+        }
 
-    .tab-btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+        .tab-pane {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
 
-    .tab-btn.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* Main Container */
-    .container {
-      padding: 12px;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Match Cards */
-    .section-title {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 12px 0 8px 4px;
-    }
-
-    .match-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 10px;
-      border: 1px solid var(--border);
-    }
-
-    .match-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .live-tag {
-      color: var(--accent);
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .live-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .teams-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .team {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      width: 40%;
-    }
-
-    .team.right {
-      justify-content: flex-end;
-    }
-
-    .score-box {
-      background: #0f172a;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 1.1rem;
-      letter-spacing: 2px;
-      border: 1px solid var(--border);
-    }
-
-    /* Table Component */
-    .table-container {
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-      text-align: left;
-    }
-
-    th, td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      background: #0f172a;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .pos {
-      font-weight: bold;
-      width: 20px;
-    }
-
-    .pos-1 { color: #f59e0b; }
-    .pos-2 { color: #94a3b8; }
-    .pos-3 { color: #b45309; }
-
-    /* Action Button */
-    .btn-action {
-      width: 100%;
-      padding: 14px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 0.95rem;
-      margin-top: 16px;
-      cursor: pointer;
-    }
-  </style>
+        h2 {
+            color: #0d6efd;
+        }
+    </style>
 </head>
+
 <body>
 
-  <header>
-    <h1>⚽ Futbol Zone</h1>
-  </header>
+    <nav class="navbar navbar-expand bg-primary navbar-dark">
+        <div class="container">
 
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('partits')">Partits</button>
-    <button class="tab-btn" onclick="switchTab('classificacio')">Classificació</button>
-    <button class="tab-btn" onclick="switchTab('golejadors')">Pichichi</button>
-  </div>
+            <a href="#" class="navbar-brand">
+                Cicles Formatius d'Informàtica
+            </a>
 
-  <div class="container">
+            <ul class="navbar-nav nav">
 
-    <!-- TAB 1: PARTITS -->
-    <div id="partits" class="tab-content active">
-      <div class="section-title">En directe ara</div>
-      
-      <div class="match-card">
-        <div class="match-header">
-          <span class="live-tag"><span class="live-dot"></span> 68' segona part</span>
-          <span>LaLiga EA Sports</span>
-        </div>
-        <div class="teams-row">
-          <div class="team">🔵 FC Barcelona</div>
-          <div class="score-box">2 - 1</div>
-          <div class="team right">⚪ Real Madrid</div>
-        </div>
-      </div>
+                <li class="nav-item">
+                    <a href="#s1" class="nav-link active" data-bs-toggle="tab">
+                        SMX
+                    </a>
+                </li>
 
-      <div class="section-title">Propers partits</div>
+                <li class="nav-item">
+                    <a href="#s2" class="nav-link" data-bs-toggle="tab">
+                        ASIX
+                    </a>
+                </li>
 
-      <div class="match-card">
-        <div class="match-header">
-          <span>Demà - 21:00</span>
-          <span>Champions League</span>
-        </div>
-        <div class="teams-row">
-          <div class="team">🔴 Man. City</div>
-          <div class="score-box">VS</div>
-          <div class="team right">🔴 Bayern</div>
-        </div>
-      </div>
+                <li class="nav-item">
+                    <a href="#s3" class="nav-link" data-bs-toggle="tab">
+                        DAM
+                    </a>
+                </li>
 
-      <div class="match-card">
-        <div class="match-header">
-          <span>Dijous - 18:45</span>
-          <span>Europa League</span>
+            </ul>
         </div>
-        <div class="teams-row">
-          <div class="team">🟢 Girona FC</div>
-          <div class="score-box">VS</div>
-          <div class="team right">🟣 Fiorentina</div>
+    </nav>
+
+    <div class="tab-content">
+
+        <div class="tab-pane active" id="s1">
+            <h2>SMX - Sistemes Microinformàtics i Xarxes</h2>
+
+            <p>
+                El cicle de SMX està orientat al muntatge, manteniment
+                i configuració d'ordinadors i xarxes informàtiques.
+            </p>
+
+            <h5>Alguns mòduls:</h5>
+
+            <ul>
+                <li>M1 - Muntatge i manteniment d'equips</li>
+                <li>M2 - Sistemes Operatius Monolloc</li>
+                <li>M3 - Aplicacions ofimàtiques</li>
+                <li>M4 - Sistemes operatius en xarxa</li>
+                <li>M5 - Xarxes locals</li>
+            </ul>
         </div>
-      </div>
+
+        <div class="tab-pane" id="s2">
+            <h2>ASIX - Administració de Sistemes Informàtics en Xarxa</h2>
+
+            <p>
+                ASIX està orientat a l'administració de servidors,
+                xarxes i sistemes informàtics.
+            </p>
+
+            <h5>Alguns mòduls:</h5>
+
+            <ul>
+                <li>M1 - Implantació de sistemes operatius</li>
+                <li>M2 - Gestió de bases de dades</li>
+                <li>M3 - Programació bàsica</li>
+                <li>M4 - Llenguatges de marques</li>
+                <li>M5 - Administració de xarxes</li>
+            </ul>
+        </div>
+
+        <div class="tab-pane" id="s3">
+            <h2>DAM - Desenvolupament d'Aplicacions Multiplataforma</h2>
+
+            <p>
+                DAM està orientat al desenvolupament de programes,
+                aplicacions mòbils i aplicacions multiplataforma.
+            </p>
+
+            <h5>Alguns mòduls:</h5>
+
+            <ul>
+                <li>M1 - Sistemes informàtics</li>
+                <li>M2 - Bases de dades</li>
+                <li>M3 - Programació</li>
+                <li>M4 - Llenguatges de marques i sistemes de gestió</li>
+                <li>M5 - Entorns de desenvolupament</li>
+            </ul>
+        </div>
+
     </div>
 
-    <!-- TAB 2: CLASSIFICACIÓ -->
-    <div id="classificacio" class="tab-content">
-      <div class="section-title">LaLiga EA Sports</div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Equip</th>
-              <th>PJ</th>
-              <th>Pts</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="pos pos-1">1</td>
-              <td><b>FC Barcelona</b></td>
-              <td>28</td>
-              <td><b>70</b></td>
-            </tr>
-            <tr>
-              <td class="pos pos-2">2</td>
-              <td>Real Madrid</td>
-              <td>28</td>
-              <td><b>66</b></td>
-            </tr>
-            <tr>
-              <td class="pos pos-3">3</td>
-              <td>Atlético de Madrid</td>
-              <td>28</td>
-              <td><b>58</b></td>
-            </tr>
-            <tr>
-              <td class="pos">4</td>
-              <td>Athletic Club</td>
-              <td>28</td>
-              <td><b>52</b></td>
-            </tr>
-            <tr>
-              <td class="pos">5</td>
-              <td>Girona FC</td>
-              <td>28</td>
-              <td><b>49</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- TAB 3: GOLEJADORS -->
-    <div id="golejadors" class="tab-content">
-      <div class="section-title">Màxims Golejadors</div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Jugador</th>
-              <th>Equip</th>
-              <th>Gols</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>R. Lewandowski</b></td>
-              <td>FC Barcelona</td>
-              <td><b>21</b></td>
-            </tr>
-            <tr>
-              <td><b>K. Mbappé</b></td>
-              <td>Real Madrid</td>
-              <td><b>19</b></td>
-            </tr>
-            <tr>
-              <td><b>A. Griezmann</b></td>
-              <td>Atlético</td>
-              <td><b>15</b></td>
-            </tr>
-            <tr>
-              <td><b>Lamine Yamal</b></td>
-              <td>FC Barcelona</td>
-              <td><b>12</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <button class="btn-action" onclick="Telegram.WebApp.close()">Tancar la Web App</button>
-
-  </div>
-
-  <script>
-    // Inicialitzar SDK Telegram
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
-
-    // Funció per canviar de pestanya
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-
-      document.getElementById(tabId).classList.add('active');
-      event.currentTarget.classList.add('active');
-    }
-  </script>
 </body>
 </html>
